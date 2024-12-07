@@ -20,16 +20,16 @@ def generate_launch_description():
         "log_level", default_value="info", description="log level"
     )
 
-    lifecycle_nodes = ["smoother_server", "planner_server"]
+    lifecycle_nodes = ["planner_server"]
 
     load_nodes = GroupAction(
         actions=[
             SetParameter("use_sim_time", use_sim_time),
-            Node(
-                package="tf2_ros",
-                executable="static_transform_publisher",
-                arguments=["0", "0", "0", "0", "0", "0", "map", "odom"],
-            ),
+            #Node(
+            #    package="tf2_ros",
+            #    executable="static_transform_publisher",
+            #    arguments=["0", "0", "0", "0", "0", "0", "map", "odom"],
+            #),
             Node(
                 package="tf2_ros",
                 executable="static_transform_publisher",
@@ -60,19 +60,6 @@ def generate_launch_description():
                     {"node_names": ["map_server_amcl"]},
                 ],
                 output="screen",
-            ),
-            Node(
-                package="nav2_smoother",
-                executable="smoother_server",
-                name="smoother_server",
-                output="screen",
-                respawn=False,
-                respawn_delay=2.0,
-                parameters=[
-                    get_package_share_directory("planner_playground")
-                    + "/config/smoother_server.yaml"
-                ],
-                arguments=["--ros-args", "--log-level", log_level],
             ),
             Node(
                 package="nav2_planner",

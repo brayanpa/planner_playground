@@ -34,17 +34,13 @@ private:
   void goal_pose_callback(const geometry_msgs::msg::PoseStamped & msg)
   {
     geometry_msgs::msg::PoseStamped pose_from_rviz = msg;
-    if (!start_filled) {
-      goal.start = pose_from_rviz;
-      start_filled = true;
-    } else {
-      goal.goal = pose_from_rviz;
-      action_client_->async_send_goal(goal);
-      start_filled = false;
-    }
+
+    goal.goal = pose_from_rviz;
+    goal.use_start = false;
+    action_client_->async_send_goal(goal);
+    
   }
   nav2_msgs::action::ComputePathToPose::Goal goal;
-  bool start_filled = false;
 
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr subscription_;
   std::shared_ptr<rclcpp_action::Client<nav2_msgs::action::ComputePathToPose>> action_client_;
